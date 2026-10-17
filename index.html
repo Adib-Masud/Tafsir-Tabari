@@ -37,10 +37,7 @@ nav {
   background: #fff;
   border-bottom: 1px solid #e4d8c7;
 }
-button, .surah-link {
-  font: inherit;
-  cursor: pointer;
-}
+button, .surah-link { font: inherit; cursor: pointer; }
 nav button, .control {
   border: 1px solid var(--gold);
   background: white;
@@ -48,12 +45,8 @@ nav button, .control {
   border-radius: 6px;
   padding: 7px 12px;
 }
-main {
-  max-width: 850px;
-  margin: auto;
-  padding: 18px;
-}
-h2, h3 { color: var(--brown); }
+main { max-width: 850px; margin: auto; padding: 18px; }
+h2, h3, h4 { color: var(--brown); }
 .panel {
   background: white;
   border: 1px solid #e7ddce;
@@ -83,74 +76,62 @@ h2, h3 { color: var(--brown); }
 }
 .translation, .tafsir { font-size: 18px; }
 .bookmark-btn {
+  display: inline-block;
   background: var(--brown);
   color: white;
   border: 0;
   border-radius: 6px;
-  padding: 8px 12px;
-  margin: 5px 0 12px;
+  padding: 6px 10px;
+  margin: 3px 0 14px;
+  font-size: 14px;
 }
+.bookmark-btn.saved { background: #8a6a35; }
+.bookmark-heading { scroll-margin-top: 12px; }
 .small-note { color: #766b5d; font-size: 14px; }
-footer {
-  text-align: center;
-  padding: 22px;
-  color: #766b5d;
-}
+footer { text-align: center; padding: 22px; color: #766b5d; }
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
-
 <header>
   <h1>মুখতাসারু তাফসীরিত তাবারী</h1>
-  <p>ইমাম মুহাম্মাদ ইবনু জারীর আত-তাবারী কর্তৃক রচিত
-তাফসীরে তাবারী কিতাবের সংক্ষিপ্ত সারমর্ম</p>
+  <p>ইমাম মুহাম্মাদ ইবনু জারীর আত-তাবারী কর্তৃক রচিত<br>তাফসীরে তাবারী কিতাবের সংক্ষিপ্ত সারমর্ম</p>
 </header>
-
 <nav>
   <button onclick="showHome()">প্রচ্ছদ</button>
   <button onclick="showBookmarks()">বুকমার্ক</button>
   <button onclick="changeSize(-2)">লেখা ছোট করুন</button>
   <button onclick="changeSize(2)">লেখা বড় করুন</button>
 </nav>
-
 <main>
   <section id="home">
     <div class="panel">
       <h2>তাফসীর পাঠাগারে স্বাগতম</h2>
       <p>নিচের তালিকা থেকে সূরা নির্বাচন করে তাফসীর পড়ুন।</p>
-      <p class="small-note">এটি প্রাথমিক নমুনা। প্রকৃত তাফসীরের HTML ফাইল যুক্ত করার পর সেগুলো এখানে দেখানো হবে।</p>
+      <p class="small-note">সূরার অংশ ও আলোচনার শিরোনামের পাশে থাকা বোতামে চাপ দিয়ে বুকমার্ক সংরক্ষণ করুন।</p>
     </div>
-
     <div class="panel">
       <h2>সূরার তালিকা</h2>
-      <input id="search" type="search" placeholder="সূরার নাম খুঁজুন"
-        oninput="filterSurahs()"
-        style="width:100%;padding:12px;font:inherit;border:1px solid #d9cbb8;border-radius:6px">
+      <input id="search" type="search" placeholder="সূরার নাম খুঁজুন" oninput="filterSurahs()" style="width:100%;padding:12px;font:inherit;border:1px solid #d9cbb8;border-radius:6px">
       <div id="surahList"></div>
     </div>
-
     <div class="panel" id="lastPanel" hidden>
       <h2>সর্বশেষ পাঠ</h2>
       <button class="surah-link" id="lastLink"></button>
     </div>
   </section>
-
   <section id="reader" hidden>
     <button class="control" onclick="showHome()">← সূরার তালিকায় ফিরুন</button>
     <h2 id="readerTitle"></h2>
     <div id="readerContent" class="tafsir"></div>
   </section>
-
   <section id="bookmarks" hidden>
     <h2>আমার বুকমার্ক</h2>
     <div id="bookmarkList"></div>
     <p class="small-note">বুকমার্ক এই ব্রাউজারে সংরক্ষিত থাকবে।</p>
   </section>
 </main>
-
 <footer>মুখতাসারু তাফসীরিত তাবারী</footer>
-
 <script>
 const surahs = [
   {id:78, name:"সূরা আন-নাবা", file:"78 Sura Naba_converted.html"},
@@ -161,9 +142,9 @@ const surahs = [
   {id:83, name:"সূরা আল-মুতাফফিফীন", file:"83_Sura_Mutaffifin.html"},
   {id:84, name:"সূরা আল-ইনশিকাক", file:"84_Sura_Inshikak.html"}
 ];
-
 const list = document.getElementById("surahList");
 let textSize = 18;
+let activeSurah = null;
 
 function renderSurahs(items) {
   list.replaceChildren();
@@ -175,24 +156,70 @@ function renderSurahs(items) {
     list.appendChild(a);
   });
 }
-
 function filterSurahs() {
   const q = document.getElementById("search").value.trim().toLowerCase();
   renderSurahs(surahs.filter(s => s.name.toLowerCase().includes(q)));
 }
-
 function hideSections() {
-  ["home", "reader", "bookmarks"].forEach(id =>
-    document.getElementById(id).hidden = true
-  );
+  ["home", "reader", "bookmarks"].forEach(id => document.getElementById(id).hidden = true);
 }
-
 function showHome() {
   hideSections();
   document.getElementById("home").hidden = false;
+  history.replaceState(null, "", location.pathname);
 }
-
-async function openSurah(s) {
+function getBookmarks() {
+  try { return JSON.parse(localStorage.getItem("tafBookmarks") || "[]"); }
+  catch { return []; }
+}
+function bookmarkKey(item) {
+  return String(item.surahId || item.id) + "::" + String(item.targetId || "surah");
+}
+function isBookmarked(surahId, targetId) {
+  return getBookmarks().some(item => Number(item.surahId || item.id) === Number(surahId) && String(item.targetId || "") === String(targetId || ""));
+}
+function saveSectionBookmark(s, targetId, title, kind, button) {
+  const items = getBookmarks();
+  const item = {id:s.id, surahId:s.id, name:s.name, file:s.file, targetId, title, kind};
+  const key = bookmarkKey(item);
+  const exists = items.some(x => bookmarkKey(x) === key);
+  if (exists) {
+    localStorage.setItem("tafBookmarks", JSON.stringify(items.filter(x => bookmarkKey(x) !== key)));
+    button.textContent = "☆ বুকমার্ক করুন";
+    button.classList.remove("saved");
+  } else {
+    items.push(item);
+    localStorage.setItem("tafBookmarks", JSON.stringify(items));
+    button.textContent = "★ বুকমার্ক করা হয়েছে";
+    button.classList.add("saved");
+  }
+}
+function addHeadingBookmarks(s, content) {
+  const headings = Array.from(content.querySelectorAll("h2, h4"));
+  let sectionCount = 0;
+  let topicCount = 0;
+  headings.forEach(heading => {
+    const title = (heading.textContent || "").trim().replace(/\s+/g, " ");
+    if (!title) return;
+    const isAyahSection = heading.tagName === "H2" && /সূরা.*[（(].*[-–—].*[）)]/.test(title);
+    const isTopic = heading.tagName === "H4";
+    if (!isAyahSection && !isTopic) return;
+    const kind = isAyahSection ? "আয়াতের অংশ" : "আলোচনার শিরোনাম";
+    const index = isAyahSection ? ++sectionCount : ++topicCount;
+    const targetId = "taf-" + s.id + "-" + (isAyahSection ? "ayah-" : "topic-") + index;
+    heading.id = targetId;
+    heading.classList.add("bookmark-heading");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "bookmark-btn";
+    const saved = isBookmarked(s.id, targetId);
+    button.textContent = saved ? "★ বুকমার্ক করা হয়েছে" : "☆ বুকমার্ক করুন";
+    if (saved) button.classList.add("saved");
+    button.onclick = () => saveSectionBookmark(s, targetId, title, kind, button);
+    heading.insertAdjacentElement("afterend", button);
+  });
+}
+async function openSurah(s, targetId = null) {
   hideSections();
   document.getElementById("reader").hidden = false;
   document.getElementById("readerTitle").textContent = s.name;
@@ -201,7 +228,7 @@ async function openSurah(s) {
   const loading = document.createElement("p");
   loading.textContent = "তাফসীর লোড হচ্ছে...";
   content.appendChild(loading);
-
+  activeSurah = s;
   try {
     const response = await fetch(s.file);
     if (!response.ok) throw new Error("ফাইল পাওয়া যায়নি");
@@ -209,44 +236,38 @@ async function openSurah(s) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     const source = doc.querySelector("main, article, .content, body");
     content.innerHTML = source ? source.innerHTML : doc.body.innerHTML;
+    addHeadingBookmarks(s, content);
     localStorage.setItem("lastSurah", String(s.id));
+    if (targetId) localStorage.setItem("lastTargetId", targetId);
+    else localStorage.removeItem("lastTargetId");
     showLastRead();
     applyTextSize();
+    history.replaceState(null, "", "?surah=" + s.id + (targetId ? "#" + encodeURIComponent(targetId) : ""));
+    if (targetId) {
+      setTimeout(() => {
+        const target = document.getElementById(targetId);
+        if (target) target.scrollIntoView({behavior:"smooth", block:"start"});
+      }, 100);
+    } else {
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
   } catch (e) {
     content.replaceChildren();
     const p = document.createElement("p");
-    p.textContent = "এই সূরার HTML ফাইল এখনো যুক্ত করা হয়নি। ফাইলটি রিপোজিটরিতে আপলোড করার পর এখানে তাফসীর পড়া যাবে।";
+    p.textContent = "এই সূরার HTML ফাইলটি পাওয়া যায়নি। রিপোজিটরিতে ফাইলের নাম কোডের নামের সঙ্গে হুবহু মিলেছে কি না পরীক্ষা করুন।";
     content.appendChild(p);
   }
-  history.replaceState(null, "", "?surah=" + s.id);
 }
-
 function changeSize(delta) {
   textSize = Math.max(14, Math.min(30, textSize + delta));
   localStorage.setItem("readerTextSize", String(textSize));
   applyTextSize();
 }
-
 function applyTextSize() {
-  document.querySelectorAll(".translation, .tafsir").forEach(el => {
+  document.querySelectorAll("#readerContent .translation, #readerContent .tafsir").forEach(el => {
     el.style.fontSize = textSize + "px";
   });
 }
-
-function getBookmarks() {
-  try { return JSON.parse(localStorage.getItem("tafBookmarks") || "[]"); }
-  catch { return []; }
-}
-
-function addBookmark(s) {
-  const items = getBookmarks();
-  if (!items.some(x => x.id === s.id)) {
-    items.push({id:s.id, name:s.name, file:s.file});
-    localStorage.setItem("tafBookmarks", JSON.stringify(items));
-  }
-  alert("বুকমার্ক সংরক্ষণ করা হয়েছে।");
-}
-
 function showBookmarks() {
   hideSections();
   document.getElementById("bookmarks").hidden = false;
@@ -257,26 +278,28 @@ function showBookmarks() {
     box.textContent = "এখনো কোনো বুকমার্ক সংরক্ষণ করা হয়নি।";
     return;
   }
-  items.forEach(s => {
+  items.forEach(item => {
     const row = document.createElement("div");
     row.className = "panel";
     const open = document.createElement("button");
     open.className = "surah-link";
-    open.textContent = s.name;
-    open.onclick = () => openSurah(s);
+    open.textContent = item.targetId ? item.name + " · " + item.title : item.name + " · পুরো সূরা";
+    open.onclick = () => {
+      const s = surahs.find(x => x.id === Number(item.surahId || item.id)) || item;
+      openSurah(s, item.targetId || null);
+    };
     const remove = document.createElement("button");
     remove.className = "control";
     remove.textContent = "বুকমার্ক সরান";
     remove.onclick = () => {
-      localStorage.setItem("tafBookmarks",
-        JSON.stringify(getBookmarks().filter(x => x.id !== s.id)));
+      const key = bookmarkKey(item);
+      localStorage.setItem("tafBookmarks", JSON.stringify(getBookmarks().filter(x => bookmarkKey(x) !== key)));
       showBookmarks();
     };
     row.append(open, remove);
     box.appendChild(row);
   });
 }
-
 function showLastRead() {
   const id = Number(localStorage.getItem("lastSurah"));
   const s = surahs.find(x => x.id === id);
@@ -285,10 +308,9 @@ function showLastRead() {
   if (s) {
     const link = document.getElementById("lastLink");
     link.textContent = "পুনরায় পড়ুন: " + s.name;
-    link.onclick = () => openSurah(s);
+    link.onclick = () => openSurah(s, localStorage.getItem("lastTargetId") || null);
   }
 }
-
 const savedSize = Number(localStorage.getItem("readerTextSize"));
 if (savedSize >= 14 && savedSize <= 30) textSize = savedSize;
 renderSurahs(surahs);
