@@ -195,18 +195,15 @@ function saveSectionBookmark(s, targetId, title, kind, button) {
   }
 }
 function addHeadingBookmarks(s, content) {
-  const headings = Array.from(content.querySelectorAll("h2, h4"));
+  const headings = Array.from(content.querySelectorAll("h2"));
   let sectionCount = 0;
-  let topicCount = 0;
   headings.forEach(heading => {
     const title = (heading.textContent || "").trim().replace(/\s+/g, " ");
     if (!title) return;
-    const isAyahSection = heading.tagName === "H2" && /সূরা.*[（(].*[-–—].*[）)]/.test(title);
-    const isTopic = heading.tagName === "H4";
-    if (!isAyahSection && !isTopic) return;
-    const kind = isAyahSection ? "আয়াতের অংশ" : "আলোচনার শিরোনাম";
-    const index = isAyahSection ? ++sectionCount : ++topicCount;
-    const targetId = "taf-" + s.id + "-" + (isAyahSection ? "ayah-" : "topic-") + index;
+    const isAyahSection = /সূরা.*[（(].*[-–—].*[）)]/.test(title);
+    if (!isAyahSection) return;
+    const index = ++sectionCount;
+    const targetId = "taf-" + s.id + "-ayah-" + index;
     heading.id = targetId;
     heading.classList.add("bookmark-heading");
     const button = document.createElement("button");
@@ -215,7 +212,7 @@ function addHeadingBookmarks(s, content) {
     const saved = isBookmarked(s.id, targetId);
     button.textContent = saved ? "★ বুকমার্ক করা হয়েছে" : "☆ বুকমার্ক করুন";
     if (saved) button.classList.add("saved");
-    button.onclick = () => saveSectionBookmark(s, targetId, title, kind, button);
+    button.onclick = () => saveSectionBookmark(s, targetId, title, "আয়াতের অংশ", button);
     heading.insertAdjacentElement("afterend", button);
   });
 }
