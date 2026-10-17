@@ -100,14 +100,14 @@ footer { text-align: center; padding: 22px; color: #766b5d; }
 <nav>
   <button onclick="showHome()">প্রচ্ছদ</button>
   <button onclick="showBookmarks()">বুকমার্ক</button>
-  <button onclick="changeSize(-2)">লেখা ছোট করুন</button>
-  <button onclick="changeSize(2)">লেখা বড় করুন</button>
+  <button onclick="changeSize(-2)">ফন্ট ছোট করুন</button>
+  <button onclick="changeSize(2)">ফন্ট বড় করুন</button>
 </nav>
 <main>
   <section id="home">
     <div class="panel">
       <h2>তাফসীর পাঠাগারে স্বাগতম</h2>
-      <p>নিচের তালিকা থেকে সূরা নির্বাচন করে তাফসীর পড়ুন।</p>
+      <p>তালিকা থেকে সূরা নির্বাচন করে তাফসীর পড়ুন।</p>
       <p class="small-note">সূরার অংশ ও আলোচনার শিরোনামের পাশে থাকা বোতামে চাপ দিয়ে বুকমার্ক সংরক্ষণ করুন।</p>
     </div>
     <div class="panel">
@@ -343,7 +343,7 @@ function showLastRead() {
   panel.hidden = !s;
   if (s) {
     const link = document.getElementById("lastLink");
-    link.textContent = "পুনরায় পড়ুন: " + s.name;
+    link.textContent = s.name;
     link.onclick = () => openSurah(s, localStorage.getItem("lastTargetId") || null);
   }
 }
