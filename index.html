@@ -329,24 +329,32 @@ function saveSectionBookmark(s,targetId,title,kind,button) {
   }
 }
 function addHeadingBookmarks(s,content) {
-  const headings = Array.from(content.querySelectorAll("h2"));
+  // সূরার আয়াত-পরিসরযুক্ত শিরোনাম h1-h6 অথবা অনুচ্ছেদে থাকলেও শনাক্ত করবে।
+  const headings = Array.from(content.querySelectorAll("h1,h2,h3,h4,h5,h6,p"));
   let sectionCount = 0;
   headings.forEach(heading => {
-    const title = (heading.textContent || "").trim().replace(/\s+/g," ");
+    const title = (heading.textContent || "").trim().replace(/\\s+/g," ");
     if (!title) return;
-    const isAyahSection = /সূরা.*[（(].*[-–—].*[）)]/.test(title);
+
+    // উদাহরণ: সূরা আন-নাবা (১-৫), সূরা আন-নাবা (৬-১১)
+    const isAyahSection = /^সূরা\\s+.+?[（(]\\s*[০-৯0-9]+\\s*[-–—]\\s*[০-৯0-9]+\\s*[）)]$/.test(title);
     if (!isAyahSection) return;
+
     const index = ++sectionCount;
     const targetId = "taf-" + s.id + "-ayah-" + index;
     heading.id = targetId;
     heading.classList.add("bookmark-heading");
+
     const button = document.createElement("button");
     button.type = "button";
     button.className = "bookmark-btn";
     const saved = isBookmarked(s.id,targetId);
     button.textContent = saved ? "★ বুকমার্ক করা হয়েছে" : "☆ বুকমার্ক করুন";
     if (saved) button.classList.add("saved");
+    button.setAttribute("aria-label", title + " বুকমার্ক করুন");
     button.onclick = () => saveSectionBookmark(s,targetId,title,"আয়াতের অংশ",button);
+
+    // প্রতিটি আয়াত-পরিসরের শিরোনামের ঠিক নিচে বাটন দেখাবে।
     heading.insertAdjacentElement("afterend",button);
   });
 }
