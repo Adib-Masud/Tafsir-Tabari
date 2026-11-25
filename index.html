@@ -66,9 +66,12 @@ h2{font-size:22px;margin:0 0 12px}
 .feature-icon{font-size:25px;color:var(--gold);margin-bottom:4px}
 .para-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}
 .para-item{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff;min-width:0}
-.para-name{font-weight:600;color:var(--brown);margin-bottom:5px}
-.download-button{display:block;width:100%;border:0;border-radius:7px;background:#eee9e1;color:#83796d;padding:7px 5px;font-size:13px;cursor:not-allowed}
-.status-note{font-size:12px;color:var(--muted);margin-top:4px;text-align:center}
+.para-name{font-weight:600;color:var(--brown);margin-bottom:7px}
+.pdf-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pdf-link{display:block;text-align:center;text-decoration:none;border:0;border-radius:7px;background:var(--brown);color:#fff;padding:7px 4px;font-size:13px}
+.pdf-link.download{background:#eee9e1;color:var(--brown);border:1px solid #dfd3c2}
+.pdf-link:hover{filter:brightness(.94)}
+.status-note{font-size:12px;color:var(--muted);margin-top:5px;text-align:center}
 .app-card{background:linear-gradient(135deg,#fff,#f5eee2);border:1px solid #dfcfb7;display:flex;align-items:center;gap:18px}
 .app-symbol{flex:0 0 76px;width:76px;height:76px;border-radius:18px;background:var(--brown);border:3px solid var(--gold);color:#fff;display:grid;place-items:center;font-size:32px}
 .app-copy{flex:1;min-width:0}
@@ -94,47 +97,13 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
 }
 
 /* সূরার DOCX-HTML পৃষ্ঠা মোবাইলের প্রস্থের সঙ্গে মানিয়ে নেওয়া */
-#readerContent {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-@media screen and (max-width: 700px) {
-  #readerContent .docx-wrapper {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-    overflow: visible !important;
-  }
-  #readerContent .docx-wrapper > section.docx,
-  #readerContent section.docx {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    margin: 0 auto 12px !important;
-    padding: 18px 10px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
-    box-shadow: none !important;
-  }
-  #readerContent .docx-wrapper > section.docx > article {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
-  #readerContent section.docx p {
-    max-width: 100%;
-  }
-  #readerContent section.docx img,
-  #readerContent section.docx table {
-    max-width: 100% !important;
-  }
+#readerContent{width:100%;max-width:100%;min-width:0}
+@media screen and (max-width:700px){
+  #readerContent .docx-wrapper{display:block!important;width:100%!important;max-width:100%!important;padding:0!important;margin:0!important;background:transparent!important;overflow:visible!important}
+  #readerContent .docx-wrapper>section.docx,#readerContent section.docx{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:0!important;height:auto!important;margin:0 auto 12px!important;padding:18px 10px!important;box-sizing:border-box!important;overflow:visible!important;box-shadow:none!important}
+  #readerContent .docx-wrapper>section.docx>article{width:100%!important;max-width:100%!important;margin:0!important}
+  #readerContent section.docx p{max-width:100%}
+  #readerContent section.docx img,#readerContent section.docx table{max-width:100%!important}
 }
 </style>
 </head>
@@ -174,7 +143,7 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
       <section class="feature-card" id="pdfPanel">
         <div class="feature-icon" aria-hidden="true">▤</div>
         <h2>পারা ভিত্তিক তাফসীর PDF</h2>
-        <p class="section-lead">প্রতিটি পারার তাফসীর PDF আকারে আলাদাভাবে ডাউনলোড করতে পারবেন। ফাইলগুলো প্রস্তুত হলে ডাউনলোড চালু করা হবে।</p>
+        <p class="section-lead">প্রতিটি পারার তাফসীর PDF আকারে পড়তে ও ডাউনলোড করতে পারবেন। PDF ফাইলগুলো এই ওয়েবসাইটের index.html ফাইলের একই ফোল্ডারে রাখুন।</p>
         <div class="para-grid" id="paraGrid"></div>
       </section>
 
@@ -231,6 +200,15 @@ function paraOrdinal(number) {
   return toBengaliNumber(number) + "তম পারা";
 }
 
+// PDF ফাইলের নাম: ১ম পারা.pdf, ২য় পারা.pdf, ৩য় পারা.pdf,
+// এরপর ৪ তম পারা.pdf থেকে ৩০ তম পারা.pdf।
+function paraFileName(number) {
+  if (number === 1) return "১ম পারা.pdf";
+  if (number === 2) return "২য় পারা.pdf";
+  if (number === 3) return "৩য় পারা.pdf";
+  return toBengaliNumber(number) + " তম পারা.pdf";
+}
+
 function buildParaCards() {
   const grid = document.getElementById("paraGrid");
   const fragment = document.createDocumentFragment();
@@ -243,21 +221,59 @@ function buildParaCards() {
     name.className = "para-name";
     name.textContent = paraOrdinal(i);
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "download-button";
-    button.disabled = true;
-    button.textContent = "PDF ডাউনলোড";
+    const actions = document.createElement("div");
+    actions.className = "pdf-actions";
 
     const status = document.createElement("div");
     status.className = "status-note";
-    status.textContent = "PDF অপেক্ষমাণ";
+    status.textContent = "PDF খোঁজা হচ্ছে...";
 
-    item.append(name, button, status);
+    item.append(name, actions, status);
     fragment.appendChild(item);
+
+    checkParaPDF(i, actions, status);
   }
 
   grid.appendChild(fragment);
+}
+
+async function checkParaPDF(number, actions, status) {
+  const filename = paraFileName(number);
+  const fileURL = "./" + encodeURIComponent(filename);
+
+  try {
+    // HEAD অনুরোধে PDF ডাউনলোড না করেই ফাইলের অস্তিত্ব যাচাই করা হয়।
+    const response = await fetch(fileURL, {
+      method: "HEAD",
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("PDF পাওয়া যায়নি");
+    }
+
+    const readLink = document.createElement("a");
+    readLink.className = "pdf-link";
+    readLink.href = fileURL;
+    readLink.target = "_blank";
+    readLink.rel = "noopener";
+    readLink.textContent = "PDF পড়ুন";
+    readLink.setAttribute("aria-label", paraOrdinal(number) + " PDF পড়ুন");
+
+    const downloadLink = document.createElement("a");
+    downloadLink.className = "pdf-link download";
+    downloadLink.href = fileURL;
+    downloadLink.download = filename;
+    downloadLink.textContent = "ডাউনলোড";
+    downloadLink.setAttribute("aria-label", paraOrdinal(number) + " PDF ডাউনলোড");
+
+    actions.replaceChildren(readLink, downloadLink);
+    status.textContent = "PDF পাওয়া গেছে";
+
+  } catch (error) {
+    actions.replaceChildren();
+    status.textContent = "PDF অপেক্ষমাণ";
+  }
 }
 
 async function loadSurahFiles() {
@@ -422,7 +438,6 @@ function saveSectionBookmark(s,targetId,title,kind,button) {
 
 /* সংশোধিত বুকমার্ক ফাংশন */
 function addHeadingBookmarks(s,content) {
-  // সূরার আয়াত-পরিসরযুক্ত শিরোনাম h1-h6 অথবা অনুচ্ছেদে থাকলেও শনাক্ত করবে।
   const headings = Array.from(
     content.querySelectorAll("h1,h2,h3,h4,h5,h6,p")
   );
@@ -434,7 +449,6 @@ function addHeadingBookmarks(s,content) {
 
     if (!title) return;
 
-    // উদাহরণ: সূরা আন-নাবা (১-৫), সূরা আন-নাবা (৬-১১)
     const isAyahSection = /^সূরা\s+.+?[（(]\s*[০-৯0-9]+\s*[-–—]\s*[০-৯0-9]+\s*[）)]$/.test(title);
 
     if (!isAyahSection) return;
@@ -465,7 +479,6 @@ function addHeadingBookmarks(s,content) {
       saveSectionBookmark(s,targetId,title,"আয়াতের অংশ",button);
     };
 
-    // প্রতিটি আয়াত-পরিসরের শিরোনামের ঠিক নিচে বাটন দেখাবে।
     heading.insertAdjacentElement("afterend",button);
   });
 }
@@ -496,7 +509,6 @@ async function openSurah(s,targetId=null) {
 
     content.innerHTML = source ? source.innerHTML : doc.body.innerHTML;
 
-    // সূরার আয়াতভিত্তিক অংশগুলোর নিচে বুকমার্ক বাটন যোগ করবে।
     addHeadingBookmarks(s,content);
 
     localStorage.setItem("lastSurah",String(s.id));
