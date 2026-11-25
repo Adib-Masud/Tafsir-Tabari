@@ -20,6 +20,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="মুখতাসারু তাফসীরিত তাবারী">
   <meta name="twitter:description" content="ইমাম তাবারীর তাফসীর গ্রন্থ অবলম্বনে প্রস্তুত সংক্ষিপ্ত সারমর্ম বাংলায় পড়ুন।">
+
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -32,9 +33,11 @@
     "author":{"@type":"Person","name":"Abid Masud"}
   }
   </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{--brown:#553b2c;--gold:#b18a4b;--paper:#faf7f0;--text:#302820;--muted:#766b5d;--line:#e7ddce}
 *{box-sizing:border-box}
@@ -80,7 +83,15 @@ h2{font-size:22px;margin:0 0 12px}
 .small-note{color:var(--muted);font-size:14px}
 footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid var(--line);background:#fff}
 [hidden]{display:none!important}
-@media(max-width:620px){main{padding:13px 7px 22px}.feature-grid{grid-template-columns:1fr}.para-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.panel,.feature-card{padding:14px}.app-card{align-items:flex-start;gap:12px}.app-symbol{width:60px;height:60px;flex-basis:60px;border-radius:14px;font-size:27px}}
+
+@media(max-width:620px){
+  main{padding:13px 7px 22px}
+  .feature-grid{grid-template-columns:1fr}
+  .para-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel,.feature-card{padding:14px}
+  .app-card{align-items:flex-start;gap:12px}
+  .app-symbol{width:60px;height:60px;flex-basis:60px;border-radius:14px;font-size:27px}
+}
 
 /* সূরার DOCX-HTML পৃষ্ঠা মোবাইলের প্রস্থের সঙ্গে মানিয়ে নেওয়া */
 #readerContent {
@@ -125,14 +136,15 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
     max-width: 100% !important;
   }
 }
-
 </style>
 </head>
+
 <body>
 <header class="site-header">
   <h1>মুখতাসারু তাফসীরিত তাবারী</h1>
   <p>ইমাম মুহাম্মাদ ইবনু জারীর আত-তাবারী কর্তৃক রচিত<br>তাফসীরে তাবারী কিতাবের সংক্ষিপ্ত সারমর্ম</p>
 </header>
+
 <nav>
   <button type="button" onclick="showHome()">প্রচ্ছদ</button>
   <button type="button" onclick="goToSection('surahPanel')">সূরার তালিকা</button>
@@ -140,6 +152,7 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
   <button type="button" onclick="goToSection('appPanel')">Android অ্যাপ</button>
   <button type="button" onclick="showBookmarks()">বুকমার্ক</button>
 </nav>
+
 <main>
   <section id="home">
     <div class="panel intro-panel">
@@ -164,6 +177,7 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
         <p class="section-lead">প্রতিটি পারার তাফসীর PDF আকারে আলাদাভাবে ডাউনলোড করতে পারবেন। ফাইলগুলো প্রস্তুত হলে ডাউনলোড চালু করা হবে।</p>
         <div class="para-grid" id="paraGrid"></div>
       </section>
+
       <section class="feature-card app-card" id="appPanel">
         <div class="app-symbol" aria-hidden="true">ت</div>
         <div class="app-copy">
@@ -194,6 +208,7 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
     <p class="small-note">বুকমার্ক এই ব্রাউজারে সংরক্ষিত থাকবে।</p>
   </section>
 </main>
+
 <footer>
   <strong>মুখতাসারু তাফসীরিত তাবারী</strong>
   <div class="small-note">ইমাম তাবারীর তাফসীর অবলম্বনে বাংলা সংক্ষিপ্ত সারমর্ম</div>
@@ -201,77 +216,115 @@ footer{text-align:center;padding:22px;color:var(--muted);border-top:1px solid va
 
 <script>
 let surahs = [];
+
 const list = document.getElementById("surahList");
 const bengaliDigits = ["০","১","২","৩","৪","৫","৬","৭","৮","৯"];
+
 function toBengaliNumber(number) {
   return String(number).replace(/\d/g, digit => bengaliDigits[Number(digit)]);
 }
+
 function paraOrdinal(number) {
   if (number === 1) return "১ম পারা";
   if (number === 2) return "২য় পারা";
   if (number === 3) return "৩য় পারা";
   return toBengaliNumber(number) + "তম পারা";
 }
+
 function buildParaCards() {
   const grid = document.getElementById("paraGrid");
   const fragment = document.createDocumentFragment();
+
   for (let i = 1; i <= 30; i++) {
     const item = document.createElement("div");
     item.className = "para-item";
+
     const name = document.createElement("div");
     name.className = "para-name";
     name.textContent = paraOrdinal(i);
+
     const button = document.createElement("button");
     button.type = "button";
     button.className = "download-button";
     button.disabled = true;
     button.textContent = "PDF ডাউনলোড";
+
     const status = document.createElement("div");
     status.className = "status-note";
     status.textContent = "PDF অপেক্ষমাণ";
+
     item.append(name, button, status);
     fragment.appendChild(item);
   }
+
   grid.appendChild(fragment);
 }
+
 async function loadSurahFiles() {
   list.textContent = "সূরার তালিকা লোড হচ্ছে...";
+
   try {
     const response = await fetch("./surah-list.json", {cache:"no-store"});
-    if (!response.ok) throw new Error("surah-list.json ফাইল পাওয়া যায়নি");
+
+    if (!response.ok) {
+      throw new Error("surah-list.json ফাইল পাওয়া যায়নি");
+    }
+
     const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("surah-list.json-এর কাঠামো সঠিক নয়");
+
+    if (!Array.isArray(data)) {
+      throw new Error("surah-list.json-এর কাঠামো সঠিক নয়");
+    }
+
     surahs = data.map(item => {
       const id = Number(item.id);
       const name = typeof item.name === "string" ? item.name.trim() : "";
       const filename = typeof item.file === "string" ? item.file.trim() : "";
-      if (!Number.isInteger(id) || id < 1 || id > 114 || !name || !filename) return null;
-      return {id,name,filename,file:"./" + encodeURIComponent(filename)};
+
+      if (!Number.isInteger(id) || id < 1 || id > 114 || !name || !filename) {
+        return null;
+      }
+
+      return {
+        id,
+        name,
+        filename,
+        file:"./" + encodeURIComponent(filename)
+      };
     }).filter(Boolean).sort((a,b) => a.id-b.id);
+
     if (!surahs.length) {
       list.textContent = "surah-list.json ফাইলে কোনো বৈধ সূরার তথ্য পাওয়া যায়নি।";
       return;
     }
+
     renderSurahs(surahs);
     showLastRead();
+
     const params = new URLSearchParams(location.search);
     const requestedId = Number(params.get("surah"));
+
     if (requestedId) {
       const requestedSurah = surahs.find(s => s.id === requestedId);
       if (requestedSurah) openSurah(requestedSurah);
     }
+
   } catch (error) {
     console.error(error);
     list.textContent = "সূরার তালিকা লোড করা যায়নি। index.html এবং surah-list.json একই ফোল্ডারে আছে কি না পরীক্ষা করুন।";
   }
 }
+
 function renderSurahs(items) {
   list.replaceChildren();
+
   if (!items.length) {
     list.textContent = "কোনো সূরা পাওয়া যায়নি।";
     return;
   }
+
   const fragment = document.createDocumentFragment();
+
   items.forEach(s => {
     const button = document.createElement("button");
     button.type = "button";
@@ -280,164 +333,293 @@ function renderSurahs(items) {
     button.onclick = () => openSurah(s);
     fragment.appendChild(button);
   });
+
   list.appendChild(fragment);
 }
+
 function filterSurahs() {
   const q = document.getElementById("search").value.trim().toLowerCase();
   renderSurahs(surahs.filter(s => s.name.toLowerCase().includes(q)));
 }
+
 function goToSection(id) {
   showHome();
+
   setTimeout(() => {
     const section = document.getElementById(id);
-    if (section) section.scrollIntoView({behavior:"smooth",block:"start"});
+
+    if (section) {
+      section.scrollIntoView({behavior:"smooth",block:"start"});
+    }
   }, 0);
 }
+
 function hideSections() {
-  ["home","reader","bookmarks"].forEach(id => document.getElementById(id).hidden = true);
+  ["home","reader","bookmarks"].forEach(id => {
+    document.getElementById(id).hidden = true;
+  });
 }
+
 function showHome() {
   hideSections();
   document.getElementById("home").hidden = false;
   history.replaceState(null,"",location.pathname);
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function getBookmarks() {
-  try { return JSON.parse(localStorage.getItem("tafBookmarks") || "[]"); }
-  catch { return []; }
+  try {
+    return JSON.parse(localStorage.getItem("tafBookmarks") || "[]");
+  } catch {
+    return [];
+  }
 }
+
 function bookmarkKey(item) {
   return String(item.surahId || item.id) + "::" + String(item.targetId || "surah");
 }
+
 function isBookmarked(surahId,targetId) {
-  return getBookmarks().some(item => Number(item.surahId || item.id) === Number(surahId) && String(item.targetId || "") === String(targetId || ""));
+  return getBookmarks().some(item =>
+    Number(item.surahId || item.id) === Number(surahId) &&
+    String(item.targetId || "") === String(targetId || "")
+  );
 }
+
 function saveSectionBookmark(s,targetId,title,kind,button) {
   const items = getBookmarks();
-  const item = {id:s.id,surahId:s.id,name:s.name,file:s.file,targetId,title,kind};
+
+  const item = {
+    id:s.id,
+    surahId:s.id,
+    name:s.name,
+    file:s.file,
+    targetId,
+    title,
+    kind
+  };
+
   const key = bookmarkKey(item);
   const exists = items.some(x => bookmarkKey(x) === key);
+
   if (exists) {
-    localStorage.setItem("tafBookmarks",JSON.stringify(items.filter(x => bookmarkKey(x) !== key)));
+    localStorage.setItem(
+      "tafBookmarks",
+      JSON.stringify(items.filter(x => bookmarkKey(x) !== key))
+    );
+
     button.textContent = "☆ বুকমার্ক করুন";
     button.classList.remove("saved");
+
   } else {
     items.push(item);
     localStorage.setItem("tafBookmarks",JSON.stringify(items));
+
     button.textContent = "★ বুকমার্ক করা হয়েছে";
     button.classList.add("saved");
   }
 }
+
+/* সংশোধিত বুকমার্ক ফাংশন */
 function addHeadingBookmarks(s,content) {
   // সূরার আয়াত-পরিসরযুক্ত শিরোনাম h1-h6 অথবা অনুচ্ছেদে থাকলেও শনাক্ত করবে।
-  const headings = Array.from(content.querySelectorAll("h1,h2,h3,h4,h5,h6,p"));
+  const headings = Array.from(
+    content.querySelectorAll("h1,h2,h3,h4,h5,h6,p")
+  );
+
   let sectionCount = 0;
+
   headings.forEach(heading => {
-    const title = (heading.textContent || "").trim().replace(/\\s+/g," ");
+    const title = (heading.textContent || "").trim().replace(/\s+/g," ");
+
     if (!title) return;
 
     // উদাহরণ: সূরা আন-নাবা (১-৫), সূরা আন-নাবা (৬-১১)
-    const isAyahSection = /^সূরা\\s+.+?[（(]\\s*[০-৯0-9]+\\s*[-–—]\\s*[০-৯0-9]+\\s*[）)]$/.test(title);
+    const isAyahSection = /^সূরা\s+.+?[（(]\s*[০-৯0-9]+\s*[-–—]\s*[০-৯0-9]+\s*[）)]$/.test(title);
+
     if (!isAyahSection) return;
 
     const index = ++sectionCount;
     const targetId = "taf-" + s.id + "-ayah-" + index;
+
     heading.id = targetId;
     heading.classList.add("bookmark-heading");
 
     const button = document.createElement("button");
     button.type = "button";
     button.className = "bookmark-btn";
+
     const saved = isBookmarked(s.id,targetId);
-    button.textContent = saved ? "★ বুকমার্ক করা হয়েছে" : "☆ বুকমার্ক করুন";
-    if (saved) button.classList.add("saved");
+
+    button.textContent = saved
+      ? "★ বুকমার্ক করা হয়েছে"
+      : "☆ বুকমার্ক করুন";
+
+    if (saved) {
+      button.classList.add("saved");
+    }
+
     button.setAttribute("aria-label", title + " বুকমার্ক করুন");
-    button.onclick = () => saveSectionBookmark(s,targetId,title,"আয়াতের অংশ",button);
+
+    button.onclick = () => {
+      saveSectionBookmark(s,targetId,title,"আয়াতের অংশ",button);
+    };
 
     // প্রতিটি আয়াত-পরিসরের শিরোনামের ঠিক নিচে বাটন দেখাবে।
     heading.insertAdjacentElement("afterend",button);
   });
 }
+
 async function openSurah(s,targetId=null) {
   hideSections();
+
   document.getElementById("reader").hidden = false;
   document.getElementById("readerTitle").textContent = s.name;
+
   const content = document.getElementById("readerContent");
   content.replaceChildren();
+
   const loading = document.createElement("p");
   loading.textContent = "তাফসীর লোড হচ্ছে...";
   content.appendChild(loading);
+
   try {
     const response = await fetch(s.file);
-    if (!response.ok) throw new Error("ফাইল পাওয়া যায়নি");
+
+    if (!response.ok) {
+      throw new Error("ফাইল পাওয়া যায়নি");
+    }
+
     const sourceHTML = await response.text();
     const doc = new DOMParser().parseFromString(sourceHTML,"text/html");
     const source = doc.querySelector("main,article,.content,body");
+
     content.innerHTML = source ? source.innerHTML : doc.body.innerHTML;
+
+    // সূরার আয়াতভিত্তিক অংশগুলোর নিচে বুকমার্ক বাটন যোগ করবে।
     addHeadingBookmarks(s,content);
+
     localStorage.setItem("lastSurah",String(s.id));
-    if (targetId) localStorage.setItem("lastTargetId",targetId);
-    else localStorage.removeItem("lastTargetId");
+
+    if (targetId) {
+      localStorage.setItem("lastTargetId",targetId);
+    } else {
+      localStorage.removeItem("lastTargetId");
+    }
+
     showLastRead();
-    history.replaceState(null,"", "?surah=" + s.id + (targetId ? "#" + encodeURIComponent(targetId) : ""));
+
+    history.replaceState(
+      null,
+      "",
+      "?surah=" + s.id + (targetId ? "#" + encodeURIComponent(targetId) : "")
+    );
+
     if (targetId) {
       setTimeout(() => {
         const target = document.getElementById(targetId);
-        if (target) target.scrollIntoView({behavior:"smooth",block:"start"});
+
+        if (target) {
+          target.scrollIntoView({behavior:"smooth",block:"start"});
+        }
       },100);
-    } else window.scrollTo({top:0,behavior:"smooth"});
+
+    } else {
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
   } catch(error) {
     console.error(error);
+
     content.replaceChildren();
+
     const p = document.createElement("p");
     p.textContent = "এই সূরার HTML ফাইলটি পাওয়া যায়নি। surah-list.json-এর file নাম এবং Repository-তে থাকা ফাইলের নাম হুবহু মিলেছে কি না পরীক্ষা করুন।";
+
     content.appendChild(p);
   }
 }
+
 function showBookmarks() {
   hideSections();
+
   document.getElementById("bookmarks").hidden = false;
+
   const box = document.getElementById("bookmarkList");
   box.replaceChildren();
+
   const items = getBookmarks();
+
   if (!items.length) {
     box.textContent = "এখনো কোনো বুকমার্ক সংরক্ষণ করা হয়নি।";
     return;
   }
+
   items.forEach(item => {
     const row = document.createElement("div");
     row.className = "panel";
-    const surah = surahs.find(x => x.id === Number(item.surahId || item.id));
+
+    const surah = surahs.find(
+      x => x.id === Number(item.surahId || item.id)
+    );
+
     const displayName = surah ? surah.name : item.name;
+
     const open = document.createElement("button");
     open.type = "button";
     open.className = "surah-link";
-    open.textContent = item.targetId ? displayName + " · " + item.title : displayName + " · পুরো সূরা";
-    open.onclick = () => openSurah(surah || item,item.targetId || null);
+
+    open.textContent = item.targetId
+      ? displayName + " · " + item.title
+      : displayName + " · পুরো সূরা";
+
+    open.onclick = () => {
+      openSurah(surah || item,item.targetId || null);
+    };
+
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "control";
     remove.textContent = "বুকমার্ক সরান";
+
     remove.onclick = () => {
       const key = bookmarkKey(item);
-      localStorage.setItem("tafBookmarks",JSON.stringify(getBookmarks().filter(x => bookmarkKey(x) !== key)));
+
+      localStorage.setItem(
+        "tafBookmarks",
+        JSON.stringify(
+          getBookmarks().filter(x => bookmarkKey(x) !== key)
+        )
+      );
+
       showBookmarks();
     };
+
     row.append(open,remove);
     box.appendChild(row);
   });
 }
+
 function showLastRead() {
   const id = Number(localStorage.getItem("lastSurah"));
   const surah = surahs.find(x => x.id === id);
+
   const panel = document.getElementById("lastPanel");
   panel.hidden = !surah;
+
   if (surah) {
     const link = document.getElementById("lastLink");
     link.textContent = surah.name;
-    link.onclick = () => openSurah(surah,localStorage.getItem("lastTargetId") || null);
+
+    link.onclick = () => {
+      openSurah(
+        surah,
+        localStorage.getItem("lastTargetId") || null
+      );
+    };
   }
 }
+
 buildParaCards();
 loadSurahFiles();
 </script>
